@@ -3,13 +3,13 @@ import requests
 
 # ________________________P.O.S.T______________________
 
-url = 'http://192.168.64.3:8000/product/'
+url = 'http://192.168.80.3:8000/product/'
 
 product_data_post = {
-    "name": "produto1",
-    "description": "teste1",
+    "name": "produto3",
+    "description": "teste3",
     "price": 1000.0,
-    "category": 1
+    "category": 3
 }
 response = requests.post(url=url, json=product_data_post)
 
