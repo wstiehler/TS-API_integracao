@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-md-12 mt-5">
+    <table class="table">
+        <thead>
+            <tr class="bg-primary text-white">
+                <th scope="col">id</th>
+                <th scope="col">product_id</th>
+                <th scope="col">marketplace</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+            <tbody>
+                {%for item in vendas%}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.product_id}}</td>
+                    <td>{{item.marketplace}}</td>
+                    {% comment %} <td><a type="button" class="btn btn-warning" href="{% url 'update_vendas' id=item.id %}">Editar</a></td>
+                    <td><a type="button" class="btn btn-danger" href="{% url 'delete_vendas' id=item.id %}">Deletar</a></td> {% endcomment %}
+                </tr>
+                {% endfor %}
+            </tbody>
+    </table>
+
+</div>
+{% endblock %}

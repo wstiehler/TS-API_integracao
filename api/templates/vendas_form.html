@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="formcontainer">
+        <form method="POST">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            
+            
+        </form>
+    </div>
+    <ul class="list-group ">
+        {% for prod in product %}
+        <li class="list-group-item">{{ prod.id }} - {{ prod.name }} - {{ prod.description }} - {{ prod.price }} - {{ prod.category }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+version: "3.9"
+services:
+    nginx:
+        build: .
+        dockerfile: ./nginx.dockerfile
+        context: .
+        image: nginx:1.18
+        container_name: container-lb
+        ports:
+        - "80:80"
+        networks: 
+        - api-network
+        # depends_on:
+        # - "app1"
+        # - "app2"
+        # - "app3"
+
+        pg_seller:
+            image: postgres
+            env_file: .env
+            ports: 
+                - "5440:5432"
+            healthcheck:
+                test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER", "-d", "$POSTGRES_DB"]
+                timeout: 3s
+                interval: 5s
+                retries: 3
+                
+        django_seller:
+            build: ./
+            env_file: .env
+            volumes:
+                - ./:/var/www
+            ports: 
+                - "8000:8000"
+            depends_on:
+                pg_seller:
+                    condition: service_healthy
+            command: sh -f entrypoint.sh
+        
+        # app1:
+        #     image: docker-example-app
+        #     container_name: container-app1
+        #     ports:
+        #     - "8000"
+        #     networks: 
+        #     - api-network
+        #     depends_on:
+        #     - "pg_seller"
+
+        # app2:
+        #     image: docker-example-app
+        #     container_name: container-app2
+        #     ports:
+        #     - "8000"
+        #     networks: 
+        #     - api-network
+        #     depends_on:
+        #     - "pg_seller"
+                    
+        # app3:
+        #     image: docker-example-app
+        #     container_name: container-app3
+        #     ports:
+        #     - "8000"
+        #     networks: 
+        #     - api-network
+        #     depends_on:
+        #     - "pg_seller"
+        networks: 
+            api-network:
+                driver: bridge

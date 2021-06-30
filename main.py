@@ -15,7 +15,7 @@ response = requests.post(url=url, json=product_data_post)
 
 # ________________________G.E.T_________________________
 
-# url = 'http://192.168.64.3:8000/product/1'
+# url = 'http://192.168.64.3:8000/product/'
 
 # response = requests.get(url=url)
 
