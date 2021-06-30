@@ -1,40 +1,40 @@
 version: "3.9"
 services:
+
     nginx:
-        build: .
-        dockerfile: ./nginx.dockerfile
-        context: .
         image: nginx:1.18
-        container_name: container-lb
+        container_name: "nginx"
+        volumes:
+            - ./nginx:/etc/nginx
         ports:
             - "80:80"
         networks: 
-            - api-network
+            - apinetwork
 
 
-        pg_seller:
-            image: postgres
-            env_file: .env
-            ports: 
-                - "5440:5432"
-            healthcheck:
-                test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER", "-d", "$POSTGRES_DB"]
-                timeout: 3s
-                interval: 5s
-                retries: 3
+    pg_seller:
+        image: postgres
+        env_file: .env
+        ports: 
+            - "5440:5432"
+        healthcheck:
+            test: ["CMD", "pg_isready", "-U", "$POSTGRES_USER", "-d", "$POSTGRES_DB"]
+            timeout: 3s
+            interval: 5s
+            retries: 3
                 
-        django_seller:
-            build: ./
-            env_file: .env
-            volumes:
-                - ./:/var/www
-            ports: 
-                - "8000:8000"
-            depends_on:
-                pg_seller:
-                    condition: service_healthy
-            command: sh -f entrypoint.sh
+    django_seller:
+        build: .
+        env_file: .env
+        volumes:
+            - ./:/var/www
+        ports: 
+            - "8000:8000"
+        depends_on:
+            pg_seller:
+                condition: service_healthy
+        command: sh -f entrypoint.sh
         
-        networks: 
-            api-network:
-                driver: bridge
+networks: 
+    apinetwork:
+            driver: bridge
